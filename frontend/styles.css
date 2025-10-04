@@ -1,0 +1,247 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+  background: url("assets/background.png") no-repeat center center/cover;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  margin-top: 0;
+  padding: 10px 35px;
+  background-color: rgba(10, 10, 25, 0.5);
+  backdrop-filter: blur(8px);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(194, 157, 37, 0.3);
+}
+
+header .logo {
+  font-family: 'Raleway', sans-serif;
+  font-size: 2.3rem;
+  font-weight: bold;
+  color: #c29d25;
+  text-shadow: 0 0 10px rgba(194, 157, 37, 0.7);
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+}
+
+.main-nav a + a {
+  border-left: 1px solid rgba(194, 157, 37, 0.4);
+  margin-left: 15px;
+  padding-left: 20px;
+}
+
+.main-nav a {
+  color: #ddd;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+  color: #fff;
+}
+
+.main-nav a.signup-btn {
+  border: 2px solid #c29d25;
+  padding: 6px 14px;
+  border-radius: 8px;
+  color: #c29d25;
+}
+
+.main-nav a.signup-btn:hover {
+  background-color: #c29d25;
+  color: #111;
+}
+
+/* Main Content Layout */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+/* Welcome Text (Left Side) */
+.welcome-text {
+  flex: 1;
+  min-width: 350px;
+  padding-right: 30px;
+  text-align: left;
+  color: #fff;
+}
+
+.welcome-text h1 {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 900;
+  font-size: 3.8rem;
+  line-height: 1.1;
+  text-shadow: 0 0 20px rgba(131, 111, 255, 0.5);
+  white-space: nowrap;
+}
+
+.welcome-text h3 {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  color: #ccc;
+  margin: 20px 0;
+  border-left: 3px solid #c29d25;
+  padding-left: 12px;
+}
+
+.welcome-text p {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #bbb;
+  max-width: 600px;
+}
+
+/* Login Box (Right Side) */
+.login-box {
+  background: rgba(10, 10, 25, 0.6);
+  backdrop-filter: blur(5px);
+  border-radius: 15px;
+  padding: 25px;
+  width: 420px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  text-align: center;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-box:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+}
+
+.login-box h2 {
+  margin-bottom: 15px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Increased gap for better spacing */
+}
+
+.login-box input {
+  padding: 10px; /* Uniform padding */
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.login-box input::placeholder {
+  color: #ccc;
+  text-align: center;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-bottom-color: #836fff;
+  box-shadow: 0 4px 10px -3px rgba(131, 111, 255, 0.4);
+}
+
+.login-box button[type="submit"] {
+  padding: 12px; /* Increased padding */
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, #6a5acd, #836fff);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 5px; /* Added margin-top */
+}
+
+.login-box button[type="submit"]:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(131, 111, 255, 0.5);
+}
+
+.login-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-top: 5px; /* Added margin-top */
+}
+
+.message {
+  margin-top: 10px;
+  height: 20px;
+  font-size: 0.9rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Footer */
+footer {
+  margin-bottom: 0;
+  padding: 10px 35px;
+  background: rgba(0, 0, 0, 0.7);
+  border-top: 2px solid gold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer .footer-left {
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: bold;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icons a {
+  color: #ccc;
+  font-size: 1.3rem;
+  text-decoration: none;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #c29d25;
+  transform: scale(1.15);
+}

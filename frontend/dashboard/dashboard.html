@@ -13,6 +13,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
+    <!-- Link to your new CSS file -->
+    <link rel="stylesheet" href="style.css">
+
     <!-- React & Babel for JSX compilation in browser -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -21,47 +24,6 @@
     <!-- Chart.js for the graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        /* Custom CSS for the CureVerse theme */
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: #cbd5e1; /* slate-300 */
-        }
-        @keyframes backgroundPan { 
-            0% { background-position: 0% 50%; } 
-            50% { background-position: 100% 50%; } 
-            100% { background-position: 0% 50%; } 
-        }
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-        .cureverse-bg { 
-            background: linear-gradient(225deg, #0a0328, #12074a, #240e8a, #0a0328); 
-            background-size: 200% 200%; 
-            position: relative; 
-            animation: backgroundPan 20s linear infinite; 
-            min-height: 100vh;
-        }
-        .stardust-bg { 
-            background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); 
-            opacity: 0.2; 
-            position: absolute; 
-            top: 0; left: 0; width: 100%; height: 100%; z-index: 0; 
-        }
-        .card-glass { 
-            background-color: rgba(30, 41, 59, 0.6); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(71, 85, 105, 0.5); 
-            animation: fadeIn 0.6s ease-out forwards;
-            opacity: 0;
-        }
-        .form-control-dark { background-color: rgba(30, 41, 59, 0.8); border-color: #4a5568; color: white; }
-        .form-control-dark::placeholder { color: #94a3b8; }
-        .form-control-dark:focus { background-color: rgba(30, 41, 59, 0.8); border-color: #8b5cf6; box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25); color: white; }
-        .btn-purple { background-color: #8b5cf6; color: white; transition: all 0.3s ease; }
-        .btn-purple:hover { background-color: #9333ea; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4); color: white; }
-    </style>
 </head>
 <body>
 
@@ -249,5 +211,3 @@
 
 </body>
 </html>
-
-

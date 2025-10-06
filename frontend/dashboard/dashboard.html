@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CureVerse Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- React & Babel for JSX compilation in browser -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Chart.js for the graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Custom CSS for the CureVerse theme */
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #cbd5e1; /* slate-300 */
+        }
+        @keyframes backgroundPan { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .cureverse-bg { 
+            background: linear-gradient(225deg, #0a0328, #12074a, #240e8a, #0a0328); 
+            background-size: 200% 200%; 
+            position: relative; 
+            animation: backgroundPan 20s linear infinite; 
+            min-height: 100vh;
+        }
+        .stardust-bg { 
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); 
+            opacity: 0.2; 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; z-index: 0; 
+        }
+        .card-glass { 
+            background-color: rgba(30, 41, 59, 0.6); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(71, 85, 105, 0.5); 
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        .form-control-dark { background-color: rgba(30, 41, 59, 0.8); border-color: #4a5568; color: white; }
+        .form-control-dark::placeholder { color: #94a3b8; }
+        .form-control-dark:focus { background-color: rgba(30, 41, 59, 0.8); border-color: #8b5cf6; box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25); color: white; }
+        .btn-purple { background-color: #8b5cf6; color: white; transition: all 0.3s ease; }
+        .btn-purple:hover { background-color: #9333ea; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4); color: white; }
+    </style>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- SVG Icons ---
+        const SearchIcon = ({ className }) => (
+          <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{width: 20, height: 20}}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        );
+
+        // --- Dashboard Components ---
+
+        const AdherenceOverview = () => (
+            <div className="card card-glass p-4 h-100" style={{ animationDelay: '0.1s' }}>
+                <div className="d-flex justify-content-between align-items-center">
+                    <h3 className="h6 mb-0 text-white-50">Adherence Overview</h3>
+                    <span style={{filter: 'drop-shadow(0 0 5px #a78bfa)'}}>☀️</span>
+                </div>
+                <p className="display-4 fw-bold text-white mt-2 mb-1">78%</p>
+                <p className="text-white-50 small">Adherence Rate</p>
+                <div className="d-flex mt-2">
+                    <span className="bg-light rounded-circle me-1" style={{width: "8px", height: "8px"}}></span>
+                    <span className="bg-secondary rounded-circle" style={{width: "8px", height: "8px"}}></span>
+                </div>
+            </div>
+        );
+
+        const AdherenceTrends = () => {
+            const chartRef = useRef(null);
+            const chartInstance = useRef(null);
+            
+            // Mock data for the bar chart - now showing last 7 days
+            const adherenceData = [80, 75, 90, 85, 95, 80, 100];
+            const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+            useEffect(() => {
+                if (chartRef.current) {
+                    const ctx = chartRef.current.getContext('2d');
+                    
+                    // Destroy previous chart instance if it exists
+                    if (chartInstance.current) {
+                        chartInstance.current.destroy();
+                    }
+
+                    chartInstance.current = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Adherence %',
+                                data: adherenceData,
+                                backgroundColor: 'rgba(34, 211, 238, 0.4)',
+                                borderColor: 'rgba(34, 211, 238, 1)',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                barPercentage: 0.6,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    grid: { color: 'rgba(100, 116, 139, 0.2)' },
+                                    ticks: { color: '#94a3b8' }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { color: '#94a3b8' }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Cleanup function to destroy chart on component unmount
+                return () => {
+                    if (chartInstance.current) {
+                        chartInstance.current.destroy();
+                    }
+                };
+            }, []);
+
+            return (
+                <div className="card card-glass p-4" style={{ animationDelay: '0.2s' }}>
+                    <h3 className="h6 text-white-50 mb-3">Adherence Trends (Last 7 Days)</h3>
+                    <div style={{ height: '300px' }}>
+                        <canvas ref={chartRef}></canvas>
+                    </div>
+                </div>
+            );
+        };
+
+        const DailyAdherence = () => {
+            const elixirs = [
+                { name: "Solar Elixir (AM)", nextTime: "7:00 AM", status: "Taken", logTime: "7:01 AM" },
+                { name: "Starfire Brew (AM)", nextTime: "7:00 AM", status: "Missed", logTime: "Missed - 8:00 AM" },
+                { name: "Dreamweaver Draught", nextTime: "8:00 PM", status: "Upcoming", logTime: "Pending" }
+            ];
+
+            return (
+                <div className="mt-4">
+                    <h3 className="h6 text-white-50 mb-3">Daily Adherence</h3>
+                    <div className="row g-4">
+                        {elixirs.map((elixir, index) => (
+                            <div className="col-lg-4" key={elixir.name}>
+                                <div className="card card-glass p-3 h-100" style={{ animationDelay: `${0.3 + index * 0.1}s` }}>
+                                    <div className="d-flex align-items-start">
+                                        <div className="p-2 rounded-circle me-3" style={{backgroundColor: 'rgba(139, 92, 246, 0.2)'}}>🧪</div>
+                                        <div>
+                                            <p className="fw-bold mb-1">{elixir.name}</p>
+                                            <p className="small text-white-50 mb-2">Next: {elixir.nextTime}</p>
+                                        </div>
+                                    </div>
+                                    <div className={`mt-auto pt-2 d-flex align-items-center justify-content-between border-top border-secondary border-opacity-25`}>
+                                        <span className="small">{elixir.logTime}</span>
+                                        <span className={`badge ${
+                                            elixir.status === 'Taken' ? 'bg-success' : elixir.status === 'Missed' ? 'bg-danger' : 'bg-info'
+                                        }`}>{elixir.status}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="cureverse-bg">
+                    <div className="stardust-bg"></div>
+                    <div className="container py-5" style={{ position: 'relative', zIndex: 1 }}>
+                        <header className="d-flex justify-content-between align-items-center mb-5">
+                             <h1 className="h4 text-white fw-bold" style={{letterSpacing: '0.1em'}}>CUREVERSE</h1>
+                             <div className="d-flex align-items-center gap-3">
+                                 <div className="position-relative d-none d-md-block">
+                                     <SearchIcon className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"/>
+                                     <input type="text" placeholder="Search anything..." className="form-control form-control-dark rounded-pill ps-5" />
+                                 </div>
+                                 <button className="btn btn-purple rounded-pill">Consult AI Assistant</button>
+                             </div>
+                        </header>
+
+                        <main>
+                            <div className="row">
+                                <div className="col-12">
+                                    <h2 className="text-white mb-4">Fitness Tracker</h2>
+                                </div>
+                                <div className="col-lg-4 mb-4">
+                                    <AdherenceOverview />
+                                </div>
+                                <div className="col-lg-8 mb-4">
+                                    <AdherenceTrends />
+                                </div>
+                                <div className="col-12">
+                                    <DailyAdherence />
+                                </div>
+                            </div>
+                        </main>
+                        
+                        <footer className="d-flex justify-content-between align-items-center text-white-50 small mt-5 pt-4 border-top border-secondary border-opacity-25">
+                            <div className="d-flex gap-4"><span>Team Info</span><span>WEBSTER 2025</span><span>Team Name</span></div>
+                            <div className="d-flex gap-3"><span>T</span><span>Y</span><span>IG</span></div>
+                        </footer>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+    </script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cureverse - User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0c0a1a;
+            background-image: url('image.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+        .main-container {
+            position: relative;
+            z-index: 10;
+        }
+        /* Glassmorphism effect for cards */
+        .card-bg {
+            background: rgba(23, 19, 44, 0.6);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(129, 118, 172, 0.3);
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+        .card-bg:hover {
+            border-color: rgba(129, 118, 172, 0.6);
+        }
+        /* Decorative background elements */
+        .bg-blur-circle-1 {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 70%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .bg-blur-circle-2 {
+            position: absolute;
+            bottom: 10%;
+            right: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 70%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .profile-avatar-glow {
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
+        }
+        .active-tab {
+            border-bottom: 2px solid #a78bfa; /* purple-400 */
+            color: #d1d5db; /* gray-200 */
+        }
+    </style>
+</head>
+<body class="relative">
+    <div class="bg-blur-circle-1"></div>
+    <div class="bg-blur-circle-2"></div>
+    <div id="stars-container" class="absolute inset-0 z-0"></div>
+
+    <div class="main-container min-h-screen w-full flex flex-col items-center p-4 sm:p-6 lg:p-8">
+        
+        <header class="w-full max-w-7xl flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-400"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                <h1 class="text-2xl font-bold tracking-wider text-white">CUREVERSE</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                 <a href="home.html" class="bg-blue-600/80 text-white font-semibold px-4 py-2 rounded-lg border border-blue-400/50 hover:bg-blue-500 transition-colors shadow-lg shadow-blue-500/20">
+                    Back to Home
+                </a>
+                <button class="p-2 rounded-full hover:bg-gray-800/50 border border-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-300"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="w-full max-w-4xl flex-grow mb-12">
+            
+            <!-- Profile Header Section --><div class="card-bg p-8 flex flex-col items-center mb-8 relative overflow-hidden">
+                <!-- Decorative background blur effect specific to this card --><div class="absolute inset-0 z-0 bg-gradient-to-br from-purple-900/30 to-blue-900/30 opacity-70 blur-xl"></div>
+                <div class="relative z-10 flex flex-col items-center">
+                    <div class="relative w-40 h-40 rounded-full bg-gradient-to-br from-purple-500 to-blue-400 flex items-center justify-center mb-4 p-1 profile-avatar-glow">
+                        <img src="https://api.dicebear.com/7.x/pixel-art/svg?seed=Cosmo&backgroundColor=b6e3f4,c0aede,d1d4f9,ffdfbf,ffd5dc" alt="User Avatar" class="w-full h-full rounded-full object-cover border-4 border-gray-900">
+                        <span class="absolute bottom-3 right-3 w-6 h-6 bg-green-500 rounded-full border-3 border-white"></span>
+                    </div>
+                    <h2 class="text-4xl font-bold text-white mb-2">Cosmo Stellar</h2>
+                    <p class="text-purple-300 text-lg mb-4">Galactic Navigator & Wellness Seeker</p>
+                    <div class="flex gap-4">
+                        <button class="bg-purple-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            Edit Profile
+                        </button>
+                        <button class="border border-gray-600 text-gray-300 font-semibold px-6 py-3 rounded-lg hover:bg-gray-800/50 transition-colors flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            View Wellness Arc
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation --><nav class="w-full mb-6">
+                <ul class="flex justify-center border-b border-gray-700">
+                    <li class="px-8 py-3 text-gray-400 hover:text-gray-200 cursor-pointer transition-colors active-tab" data-tab="overview">Overview</li>
+                    <li class="px-8 py-3 text-gray-400 hover:text-gray-200 cursor-pointer transition-colors" data-tab="medications">Medications</li>
+                    <li class="px-8 py-3 text-gray-400 hover:text-gray-200 cursor-pointer transition-colors" data-tab="settings">Settings</li>
+                </ul>
+            </nav>
+
+            <!-- Tab Content (Overview) --><div id="overview" class="tab-content space-y-6">
+                <div class="card-bg p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Personal Star-Log</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-400">Email Address:</p>
+                            <p class="text-purple-300 font-medium">cosmo.stellar@cureverse.com</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">Member Since:</p>
+                            <p class="font-medium">Star-date 2023.10.25</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">Current Planet:</p>
+                            <p class="font-medium">Terra Prime</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">Last Login:</p>
+                            <p class="font-medium">15 minutes ago</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-bg p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Recent Celestial Events</h3>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center text-sm">
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">●</span>
+                                <p class="text-gray-300">Logged <span class="font-medium text-white">Aqua Vitae</span> (AM) dose.</p>
+                            </div>
+                            <span class="text-gray-500 text-xs">3 hours ago</span>
+                        </li>
+                        <li class="flex justify-between items-center text-sm">
+                            <div class="flex items-center gap-2">
+                                <span class="text-yellow-400">●</span>
+                                <p class="text-gray-300">Updated <span class="font-medium text-white">Gravitational Alignment</span> preferences.</p>
+                            </div>
+                            <span class="text-gray-500 text-xs">Yesterday</span>
+                        </li>
+                        <li class="flex justify-between items-center text-sm">
+                            <div class="flex items-center gap-2">
+                                <span class="text-red-400">●</span>
+                                <p class="text-gray-300">Missed <span class="font-medium text-white">Nocturne Nectar</span> (PM) dose.</p>
+                            </div>
+                            <span class="text-gray-500 text-xs">2 days ago</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab Content (Medications) --><div id="medications" class="tab-content hidden space-y-6">
+                <div class="card-bg p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Active Potions</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center justify-between bg-black/30 p-3 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-300"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 15l-3-3h6l-3 3z"></path><path d="M12 9V6"></path><path d="M9 12H6"></path><path d="M15 12h3"></path></svg>
+                                <span>Solar Elixir (AM)</span>
+                            </div>
+                            <span class="text-sm text-gray-400">Daily - 7:00 AM</span>
+                        </li>
+                        <li class="flex items-center justify-between bg-black/30 p-3 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-300"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 15l-3-3h6l-3 3z"></path><path d="M12 9V6"></path><path d="M9 12H6"></path><path d="M15 12h3"></path></svg>
+                                <span>Lunar Drapeze (PM)</span>
+                            </div>
+                            <span class="text-sm text-gray-400">Daily - 7:00 PM</span>
+                        </li>
+                    </ul>
+                     <button class="mt-5 w-full bg-blue-600/80 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors border border-blue-400/50">Manage Potions</button>
+                </div>
+            </div>
+
+            <!-- Tab Content (Settings) --><div id="settings" class="tab-content hidden space-y-6">
+                <div class="card-bg p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Notification Preferences</h3>
+                    <div class="space-y-4">
+                        <label for="email-notifications" class="flex items-center justify-between cursor-pointer">
+                            <span class="text-gray-300">Email Alerts</span>
+                            <input type="checkbox" id="email-notifications" class="sr-only peer" checked>
+                            <div class="relative w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                        </label>
+                        <p class="text-xs text-gray-500 mt-1">Receive important updates and reminders via email.</p>
+
+                        <label for="mobile-notifications" class="flex items-center justify-between cursor-pointer">
+                            <span class="text-gray-300">Orbital Reminders</span>
+                            <input type="checkbox" id="mobile-notifications" class="sr-only peer">
+                            <div class="relative w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                        </label>
+                        <p class="text-xs text-gray-500 mt-1">Get instant notifications directly to your connected orbital device.</p>
+                    </div>
+                </div>
+
+                <div class="card-bg p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Appearance</h3>
+                    <div>
+                        <label for="app-theme" class="text-gray-300 block mb-2">Cureverse Theme</label>
+                        <select id="app-theme" class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option value="celestial_dark">Celestial Dark (Default)</option>
+                            <option value="nebula_light">Nebula Light</option>
+                            <option value="starlight">Starlight</option>
+                        </select>
+                    </div>
+                    <button class="mt-6 w-full bg-green-600/80 text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-700 transition-colors border border-green-400/50">Save Settings</button>
+                </div>
+            </div>
+
+        </main>
+        
+        <footer class="w-full max-w-6xl flex items-center justify-center text-sm text-gray-400 mt-auto">
+            <div class="flex items-center gap-4 border-t border-gray-700/50 pt-4 px-8">
+                <a href="#" class="hover:text-white transition-colors">Team Info</a>
+                <span class="text-gray-600">|</span>
+                <span class="hover:text-white transition-colors">WEBSTER 2025</span>
+                 <span class="text-gray-600">|</span>
+                <a href="#" class="hover:text-white transition-colors">Team Name</a>
+            </div>
+        </footer>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Star background generation
+            const starsContainer = document.getElementById('stars-container');
+            const numStars = 150;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                starsContainer.appendChild(star);
+            }
+
+            // Tab switching logic
+            const tabs = document.querySelectorAll('[data-tab]');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and hide all content
+                    tabs.forEach(t => t.classList.remove('active-tab'));
+                    tabContents.forEach(content => content.classList.add('hidden'));
+
+                    // Add active class to clicked tab
+                    tab.classList.add('active-tab');
+
+                    // Show corresponding content
+                    const targetTabId = tab.dataset.tab;
+                    document.getElementById(targetTabId).classList.remove('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CureVerse Medication Tracker</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- React via CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // --- Mock Data ---
+        const emergencyDoses = [
+            { id: 1, time: "9:00 AM - MISSED", status: "MISSED" },
+            { id: 2, time: "1:00 PM - MISSED", status: "UPCOMING" },
+        ];
+        const overdueDoses = [
+            { id: 3, time: "9:00 AM - OVERDUE", status: "MISSED" },
+            { id: 4, time: "1:00 PM - MISSED", status: "UPCOMING" },
+        ];
+        const upcomingDoses = [
+            { id: 5, time: "10:00 AM - TAKEN", status: "TAKEN" },
+            { id: 6, time: "2:00 PM - UPCOMING", status: "UPCOMING" },
+        ];
+
+
+        // --- React Components ---
+        const Header = () => (
+            <header className="d-flex justify-content-between align-items-center mb-4">
+                <h1 className="h4 text-white fw-bold" style={{ letterSpacing: '0.1em' }}>CUREVERSE</h1>
+                <div className="d-none d-md-block flex-grow-1 mx-4" style={{ maxWidth: '600px' }}>
+                    <div className="position-relative">
+                        <input type="text" placeholder="Search..." className="form-control form-control-dark rounded-pill ps-5" />
+                    </div>
+                </div>
+                <div className="d-flex align-items-center gap-3">
+                    <button className="btn btn-purple rounded-pill">Consult AI Assistant</button>
+                </div>
+            </header>
+        );
+
+        const DoseItem = ({ dose }) => {
+            const getStatusClass = (status) => {
+                switch(status) {
+                    case "MISSED": return "status-missed";
+                    case "UPCOMING": return "status-upcoming";
+                    case "TAKEN": return "status-taken";
+                    default: return "";
+                }
+            };
+
+            return (
+                <div className="dose-item d-flex justify-content-between align-items-center p-2 rounded mb-2">
+                    <span className="text-white-50">{dose.time}</span>
+                    <span className={`status-badge ${getStatusClass(dose.status)}`}>
+                        {dose.status === "TAKEN" ? "✓" : dose.status}
+                    </span>
+                </div>
+            )
+        };
+
+        const TrackerCard = ({ variant, title, icon, message, doses, button }) => {
+            return (
+                <div className={`tracker-card card-glass h-100 p-3 variant-${variant}`}>
+                    <div className="card-header bg-transparent border-0 d-flex justify-content-between align-items-center text-white">
+                        <h5 className="mb-0">{icon} {title}</h5>
+                    </div>
+                    <div className="card-body text-white">
+                        <p className="card-text small mb-4">{message}</p>
+                        <h6 className="text-white fw-bold">Today's Doses</h6>
+                        <div className="dose-list">
+                            {doses.map(dose => <DoseItem key={dose.id} dose={dose} />)}
+                        </div>
+                    </div>
+                    <div className="card-footer bg-transparent border-0 d-grid gap-2">
+                         <div className="d-flex justify-content-between gap-2">
+                            <button className="btn btn-log flex-fill">Log Missed</button>
+                            <button className="btn btn-log flex-fill">Log as Taken</button>
+                        </div>
+                        {button && <button className={`btn btn-block ${button.class}`}>{button.label}</button>}
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="cureverse-bg p-3 p-sm-4 p-lg-5 position-relative overflow-hidden">
+                    <div className="stardust-bg"></div>
+                    <div className="container-fluid" style={{ zIndex: 1, position: 'relative' }}>
+                        <Header />
+                        <main>
+                            <h2 className="text-white mb-4">My Medications Tracker</h2>
+                            <div className="row g-4">
+                                <div className="col-lg-4">
+                                     <TrackerCard 
+                                        variant="emergency"
+                                        title="EMERGENCY ALERT"
+                                        icon="🚨"
+                                        message="10 Consecutive Missed Doses. Please contact your healthcare provider immediately."
+                                        doses={emergencyDoses}
+                                        button={{ label: "Contact Provider", class: "btn-emergency" }}
+                                     />
+                                </div>
+                                <div className="col-lg-4">
+                                    <TrackerCard 
+                                        variant="overdue"
+                                        title="OVERDUE"
+                                        icon="🕒"
+                                        message="Take dose before 1:00 PM. Grace period: 00:27"
+                                        doses={overdueDoses}
+                                        button={{ label: "Mark as Taken", class: "btn-overdue" }}
+                                     />
+                                </div>
+                                <div className="col-lg-4">
+                                     <TrackerCard 
+                                        variant="upcoming"
+                                        title="UPCOMING"
+                                        icon="📅"
+                                        message="Next Dose: Today at 8:00 PM"
+                                        doses={upcomingDoses}
+                                        button={{ label: "Mark as Taken", class: "btn-upcoming" }}
+                                     />
+                                </div>
+                            </div>
+                        </main>
+                        <footer className="d-flex justify-content-between align-items-center text-white-50 small mt-5">
+                            <div className="d-flex gap-4"><span>Team Info</span><span>WEBSTER 2025</span><span>Team Name</span></div>
+                        </footer>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
+

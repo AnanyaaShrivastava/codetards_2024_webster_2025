@@ -1,0 +1,95 @@
+.dashboard-container {
+  padding: 2rem 3rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.main-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-shadow: 0 0 10px rgba(224, 207, 160, 0.5);
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 1rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--card-border);
+  margin-bottom: 0.75rem;
+}
+
+.nav-list, .potion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item a, .potion-item {
+  display: block;
+  padding: 0.5rem 0;
+  color: var(--text-light);
+  text-decoration: none;
+  transition: letter-spacing 0.3s ease;
+  font-size: 1rem;
+}
+
+.nav-item a:hover {
+  letter-spacing: 1.5px;
+  color: #fff;
+}
+
+.potion-item {
+  border-bottom: 1px solid rgba(160, 138, 66, 0.2);
+  padding-left: 0.5rem;
+}
+
+.daily-oracle-text {
+  font-style: italic;
+  color: var(--text-light);
+  opacity: 0.8;
+}
+
+.wellness-setup-buttons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.potion-button {
+  background-color: var(--card-border);
+  color: var(--deep-blue);
+  border: none;
+  padding: 0.8em 1.5em;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.potion-button:hover {
+  background-color: var(--text-light);
+  box-shadow: 0 0 15px rgba(224, 207, 160, 0.4);
+}
+
+.potion-button.secondary {
+  background-color: transparent;
+  color: var(--card-border);
+  border: 1px solid var(--card-border);
+}
+
+.potion-button.secondary:hover {
+  background-color: rgba(160, 138, 66, 0.1);
+  color: var(--text-light);
+}

@@ -1,11 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- Configuration ---
+    const API_URL = 'http://localhost:5000'; // Your backend server URL
+    const TOKEN_KEY = 'cureverse-token'; // The key for storing the auth token
+
     // --- Element Selectors ---
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
     const forgotPasswordForm = document.getElementById('forgot-password-form');
     const resetPasswordForm = document.getElementById('reset-password-form');
-    
-    const API_URL = 'http://localhost:5000'; // Your backend server URL
+
+    // --- ✨ New: Auto-Redirect for Logged-In Users ---
+    // This runs on pages like index.html and signup.html.
+    // If a token is found, it means the user is already logged in.
+    if (loginForm || signupForm) {
+        const token = localStorage.getItem(TOKEN_KEY);
+        if (token) {
+            console.log('Token found, redirecting to homepage.');
+            window.location.href = 'homepage.html'; // Redirect to the main app page
+        }
+    }
 
     // --- Login Form Logic ---
     if (loginForm) {
@@ -27,10 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    localStorage.setItem('cureverse-token', data.token);
-                    alert('Login successful! Welcome back.');
-                    // In a real app, redirect to a protected dashboard
-                    // window.location.href = '/dashboard.html';
+                    localStorage.setItem(TOKEN_KEY, data.token);
+                    window.location.href = 'homepage.html';
                 } else {
                     messageEl.textContent = data.msg || 'Login failed. Please check your credentials.';
                     messageEl.style.color = 'salmon';
@@ -44,10 +56,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Signup Form Logic ---
     if (signupForm) {
-        // ... your existing signup logic remains here ...
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            const messageEl = document.getElementById('signup-message');
+            messageEl.textContent = '';
+
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            if (password.length < 6) {
+                messageEl.textContent = 'Password must be at least 6 characters long.';
+                messageEl.style.color = 'salmon';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageEl.textContent = 'Account created successfully! You can now log in.';
+                    messageEl.style.color = 'lightgreen';
+                    signupForm.reset();
+                } else {
+                    messageEl.textContent = data.msg || 'Signup failed. Please try again.';
+                    messageEl.style.color = 'salmon';
+                }
+            } catch (error) {
+                console.error('Signup Error:', error);
+                messageEl.textContent = 'An error occurred. Please check your connection and try again.';
+                messageEl.style.color = 'salmon';
+            }
+        });
     }
 
-    // --- NEW: Forgot Password Form Logic ---
+    // --- Forgot Password Form Logic ---
     if (forgotPasswordForm) {
         forgotPasswordForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -80,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- NEW: Reset Password Form Logic ---
+    // --- Reset Password Form Logic ---
     if (resetPasswordForm) {
         resetPasswordForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -96,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Get the token from the URL query string
             const urlParams = new URLSearchParams(window.location.search);
             const resetToken = urlParams.get('token');
 

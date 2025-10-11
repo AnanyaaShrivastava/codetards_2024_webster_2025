@@ -2,118 +2,163 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-// POST /api/auth/signup
-router.post('/signup', async (req, res) => {
-    // ... your existing signup logic remains here ...
+// (Your /register and /login routes are fine and remain unchanged)
+// @route   POST /api/auth/register
+// @desc    Register a new user
+// @access  Public
+router.post('/register', async (req, res) => {
+    const { username, email, password } = req.body;
+    try {
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ msg: 'User with this email already exists' });
+        }
+        let userByUsername = await User.findOne({ username });
+        if (userByUsername) {
+            return res.status(400).json({ msg: 'Username is already taken' });
+        }
+        user = new User({
+            username,
+            email,
+            password,
+        });
+        await user.save();
+        const payload = { user: { id: user.id } };
+        jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: '5h' },
+            (err, token) => {
+                if (err) throw err;
+                res.status(201).json({ token });
+            }
+        );
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server error');
+    }
 });
 
-// POST /api/auth/login
+// @route   POST /api/auth/login
+// @desc    Authenticate user & get token
+// @access  Public
 router.post('/login', async (req, res) => {
-    // ... your existing login logic remains here ...
+    const { username, password } = req.body;
+    try {
+        let user = await User.findOne({ username }).select('+password');
+        if (!user) {
+            return res.status(400).json({ msg: 'Invalid Credentials' });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ msg: 'Invalid Credentials' });
+        }
+        const payload = { user: { id: user.id } };
+        jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: '5h' },
+            (err, token) => {
+                if (err) throw err;
+                res.json({ token });
+            }
+        );
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server error');
+    }
 });
 
-// --- NEW: FORGOT PASSWORD ROUTE ---
+
+// --- FORGOT PASSWORD ROUTE (WITH IMPROVED LOGGING) ---
 router.post('/forgotpassword', async (req, res) => {
     const { email } = req.body;
-
     try {
         const user = await User.findOne({ email });
-
         if (!user) {
-            // To prevent user enumeration, we send a success-like response even if user not found
+            console.log(`Password reset attempt for non-existent email: ${email}`);
             return res.status(200).json({ msg: 'Email sent if user exists' });
         }
 
-        // Generate a random reset token (unhashed version)
         const resetToken = crypto.randomBytes(20).toString('hex');
-
-        // Hash the token and set it on the user model
-        user.resetPasswordToken = crypto
-            .createHash('sha256')
-            .update(resetToken)
-            .digest('hex');
-        
-        // Set an expiration time (10 minutes)
-        user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
-
+        user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
         await user.save();
+        
+        console.log(`Generated reset token for ${user.email}`);
 
-        // Create the reset URL (points to your frontend)
         const resetUrl = `http://127.0.0.1:5500/frontend/reset-password.html?token=${resetToken}`;
-
-        // Create email message
         const message = `
             <h1>You have requested a password reset</h1>
             <p>Please go to this link to reset your password:</p>
             <a href="${resetUrl}" clicktracking=off>${resetUrl}</a>
-            <p>This link will expire in 10 minutes.</p>
-        `;
+            <p>This link will expire in 10 minutes.</p>`;
 
-        // Configure Nodemailer to send the email
+        console.log("Attempting to create Nodemailer transport...");
         const transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
+            secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
         });
-        
+
+        console.log(`Attempting to send email to ${user.email}...`);
         await transporter.sendMail({
             from: `Cureverse Support <${process.env.EMAIL_USER}>`,
             to: user.email,
             subject: 'Password Reset Request',
             html: message,
         });
-        
+
+        console.log(`SUCCESS: Password reset email sent to ${user.email}`);
         res.status(200).json({ msg: 'Email sent successfully' });
 
     } catch (error) {
-        // Clear token fields on error to allow user to try again
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpire = undefined;
-        await user.save();
-        console.error(error);
-        res.status(500).json({ msg: 'Server error' });
+        console.error('--- FORGOT PASSWORD ERROR ---');
+        console.error(error); // This will print the detailed Nodemailer error
+        
+        // Reset tokens on error to allow the user to try again
+        const userWithError = await User.findOne({ email });
+        if (userWithError) {
+            userWithError.resetPasswordToken = undefined;
+            userWithError.resetPasswordExpire = undefined;
+            await userWithError.save();
+        }
+        res.status(500).json({ msg: 'Server error while trying to send email.' });
     }
 });
 
-// --- NEW: RESET PASSWORD ROUTE ---
+// --- RESET PASSWORD ROUTE ---
 router.put('/resetpassword/:resettoken', async (req, res) => {
-    // Hash the token from the URL to match the one in the DB
     const resetPasswordToken = crypto
         .createHash('sha256')
         .update(req.params.resettoken)
         .digest('hex');
-
     try {
         const user = await User.findOne({
             resetPasswordToken,
-            resetPasswordExpire: { $gt: Date.now() }, // Check if token is not expired
+            resetPasswordExpire: { $gt: Date.now() },
         });
-
         if (!user) {
             return res.status(400).json({ msg: 'Invalid or expired token' });
         }
-
-        // Set new password
         user.password = req.body.password;
-        // Invalidate the token
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
-
         await user.save();
-
         res.status(200).json({ msg: 'Password reset successful' });
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ msg: 'Server error' });
     }
 });
 
-
 module.exports = router;
+

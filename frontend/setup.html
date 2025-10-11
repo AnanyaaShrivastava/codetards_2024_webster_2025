@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CureVerse - Setup</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- React via CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* Custom CSS for the CureVerse theme */
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #cbd5e1; /* slate-300 */
+        }
+        @keyframes backgroundPan { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .cureverse-bg { 
+            background-image: 
+                linear-gradient(225deg, rgba(10, 3, 40, 0.85), rgba(18, 7, 74, 0.85), rgba(36, 14, 138, 0.85), rgba(10, 3, 40, 0.85)),
+                /* --- ✅ UPDATED IMAGE NAME HERE --- */
+                url('image_01aec2.png');
+            background-size: 200% 200%, cover; 
+            background-position: center;
+            position: relative; 
+            animation: backgroundPan 20s linear infinite; 
+            min-height: 100vh;
+        }
+        .stardust-bg { 
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); 
+            opacity: 0.2; 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; z-index: 0; 
+        }
+
+        /* --- Header & Form Styles --- */
+        .form-control-dark { 
+            background-color: rgba(30, 41, 59, 0.8); 
+            border: 1px solid #4a5568; 
+            color: white; 
+        }
+        .form-control-dark::placeholder { color: #94a3b8; }
+        .form-control-dark:focus { 
+            background-color: rgba(30, 41, 59, 0.8); 
+            border-color: #8b5cf6; 
+            box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25); 
+            color: white; 
+        }
+        .btn-purple { 
+            background-color: #8b5cf6; 
+            color: white; 
+            transition: all 0.3s ease; 
+        }
+        .btn-purple:hover { 
+            background-color: #9333ea; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4); 
+            color: white; 
+        }
+
+        /* --- Main Content Styles --- */
+        .card-glass {
+            background-color: rgba(30, 41, 59, 0.6); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(71, 85, 105, 0.5); 
+            border-radius: 1rem;
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .btn-inscribe {
+            background: linear-gradient(to right, #8b5cf6, #7c3aed);
+            color: white;
+            border: none;
+            font-weight: bold;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        .btn-inscribe:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(124, 58, 237, 0.4);
+        }
+
+        .elixir-item {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.7);
+        }
+
+        .btn-icon {
+            background-color: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .btn-icon:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const Header = () => (
+            <header className="d-flex justify-content-between align-items-center mb-5">
+                <h1 className="h4 text-white fw-bold" style={{ letterSpacing: '0.1em' }}>CUREVERSE</h1>
+                <div className="d-none d-md-block flex-grow-1 mx-4" style={{ maxWidth: '600px' }}>
+                    <div className="position-relative">
+                        <input type="text" placeholder="Search..." className="form-control form-control-dark rounded-pill ps-5" />
+                    </div>
+                </div>
+                <div className="d-flex align-items-center gap-3">
+                    <button className="btn btn-purple rounded-pill">Consult AI Assistant</button>
+                </div>
+            </header>
+        );
+
+        const PotionForm = ({ addElixir }) => {
+            const [name, setName] = useState('');
+            const [dosage, setDosage] = useState('');
+            const [time, setTime] = useState('08:00');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!name || !dosage) return;
+                const newElixir = {
+                    id: Date.now(),
+                    name,
+                    dosage,
+                    schedule: `Once Daily (${time} AM)` // Simplified for this example
+                };
+                addElixir(newElixir);
+                // Clear form
+                setName('');
+                setDosage('');
+                setTime('08:00');
+            };
+
+            return (
+                <div className="card card-glass p-4 h-100">
+                    <h3 className="text-white h5 mb-4">Concoct a New Potion</h3>
+                    <form onSubmit={handleSubmit} className="d-flex flex-column h-100">
+                        <div className="mb-3">
+                            <label htmlFor="elixirName" className="form-label text-white-50 small">Elixir Name</label>
+                            <input type="text" className="form-control form-control-dark" id="elixirName" placeholder="e.g., Somnus Draught, Aurum Vitalis...." value={name} onChange={e => setName(e.target.value)} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="dosage" className="form-label text-white-50 small">Dosage / Potency</label>
+                            <input type="text" className="form-control form-control-dark" id="dosage" placeholder="e.g., 500mg, 1 tablet" value={dosage} onChange={e => setDosage(e.target.value)} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="time" className="form-label text-white-50 small">Time of Incantation</label>
+                            <input type="time" className="form-control form-control-dark" id="time" value={time} onChange={e => setTime(e.target.value)} />
+                        </div>
+                         <div className="mb-4">
+                            <label htmlFor="frequency" className="form-label text-white-50 small">Ritual Frequency</label>
+                             <select className="form-select form-control-dark" id="frequency">
+                                 <option>Once Daily</option>
+                                 <option>Twice Daily</option>
+                                 <option>As needed</option>
+                            </select>
+                        </div>
+                        <button type="submit" className="btn btn-inscribe mt-auto">Inscribe Elixir</button>
+                    </form>
+                </div>
+            );
+        };
+        
+        const FormularyIndex = ({ elixirs, removeElixir }) => (
+            <div className="card card-glass p-4 h-100">
+                 <h3 className="text-white h5 mb-4">Formulary Index</h3>
+                 <div className="d-flex flex-column gap-3">
+                    {elixirs.length > 0 ? elixirs.map(elixir => (
+                        <div key={elixir.id} className="elixir-item p-3 rounded d-flex justify-content-between align-items-center">
+                            <div>
+                                <p className="fw-bold mb-1">{elixir.name}</p>
+                                <p className="small text-white-50 mb-1">Potency: {elixir.dosage}</p>
+                                <p className="small text-white-50 mb-0">{elixir.schedule}</p>
+                            </div>
+                            <div>
+                                <button className="btn-icon">✏</button>
+                                <button className="btn-icon" onClick={() => removeElixir(elixir.id)}>❌</button>
+                            </div>
+                        </div>
+                    )) : (
+                        <p className="text-white-50 text-center mt-4">Your grimoire is empty. Concoct a potion to begin.</p>
+                    )}
+                 </div>
+            </div>
+        );
+
+        const App = () => {
+            const [elixirs, setElixirs] = useState([
+                { id: 1, name: 'Elixir: Vitamin C', dosage: '1 tablet', schedule: 'Twice Daily (9:00 AM, 9:00 PM)'},
+                { id: 2, name: 'Elixir: Paracetamol', dosage: '500mg', schedule: 'Once Daily (8:00 AM)'}
+            ]);
+
+            const addElixir = (newElixir) => {
+                setElixirs(prevElixirs => [newElixir, ...prevElixirs]);
+            };
+            
+            const removeElixir = (id) => {
+                setElixirs(prevElixirs => prevElixirs.filter(elixir => elixir.id !== id));
+            };
+
+            return (
+                <div className="cureverse-bg min-vh-100 p-3 p-sm-4 p-lg-5 position-relative overflow-hidden">
+                    <div className="stardust-bg"></div>
+                    <div className="container-fluid" style={{ maxWidth: '1200px', zIndex: 1, position: 'relative' }}>
+                        <Header />
+                        <main>
+                            <h2 className="text-white mb-4">Fines Tracker</h2>
+                             <div className="row g-4">
+                                 <div className="col-lg-5">
+                                     <PotionForm addElixir={addElixir} />
+                                 </div>
+                                 <div className="col-lg-7">
+                                     <FormularyIndex elixirs={elixirs} removeElixir={removeElixir} />
+                                 </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+    </script>
+</body>
+</html>
+

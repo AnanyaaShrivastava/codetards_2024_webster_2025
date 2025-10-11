@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CureVerse - My Medications Tracker</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom CSS for the CureVerse theme */
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #cbd5e1; /* slate-300 */
+        }
+        @keyframes backgroundPan { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .cureverse-bg { 
+            background-image: 
+                linear-gradient(225deg, rgba(10, 3, 40, 0.85), rgba(18, 7, 74, 0.85), rgba(36, 14, 138, 0.85), rgba(10, 3, 40, 0.85)),
+                url('image.png');
+            background-size: 200% 200%, cover; 
+            background-position: center;
+            position: relative; 
+            animation: backgroundPan 20s linear infinite; 
+            min-height: 100vh;
+        }
+        .stardust-bg { 
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); 
+            opacity: 0.2; 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; z-index: 0; 
+        }
+
+        /* --- Header Styles --- */
+        .form-control-dark { 
+            background-color: rgba(30, 41, 59, 0.8); 
+            border: 1px solid #4a5568; 
+            color: white; 
+        }
+        .form-control-dark::placeholder { color: #94a3b8; }
+        .form-control-dark:focus { 
+            background-color: rgba(30, 41, 59, 0.8); 
+            border-color: #8b5cf6; 
+            box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25); 
+            color: white; 
+        }
+        .btn-purple { 
+            background-color: #8b5cf6; 
+            color: white; 
+            transition: all 0.3s ease; 
+        }
+        .btn-purple:hover { 
+            background-color: #9333ea; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4); 
+            color: white; 
+        }
+
+        /* --- Tracker Card Styles --- */
+        .tracker-card {
+            background-color: rgba(20, 15, 40, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tracker-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Card border glow effects */
+        .card-border-emergency { 
+            border-color: rgba(220, 38, 38, 0.5); 
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.2);
+        }
+        .card-border-overdue { 
+            border-color: rgba(234, 179, 8, 0.5); 
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.2);
+        }
+        .card-border-upcoming { 
+            border-color: rgba(59, 130, 246, 0.5); 
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* Dose item styling */
+        .dose-item {
+            background-color: rgba(10, 5, 25, 0.5);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            transition: background-color 0.3s ease;
+        }
+        .dose-item:hover {
+            background-color: rgba(30, 25, 60, 0.5);
+        }
+
+        /* Status badges */
+        .status-badge {
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            color: white;
+        }
+        .status-missed { background-color: #ef4444; }
+        .status-upcoming { background-color: #3b82f6; }
+        .status-taken { background-color: #22c55e; }
+        .status-overdue { background-color: #f59e0b; }
+
+        /* Action buttons */
+        .btn-action {
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+            padding: 0.6rem 1rem;
+        }
+        .btn-emergency { background-color: #dc2626; color: white; }
+        .btn-emergency:hover { background-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
+        .btn-overdue { background-color: #d97706; color: white; }
+        .btn-overdue:hover { background-color: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
+        .btn-upcoming { background-color: #2563eb; color: white; }
+        .btn-upcoming:hover { background-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+
+        .btn-secondary-action {
+            background-color: rgba(71, 85, 105, 0.4);
+            color: #d1d5db;
+        }
+         .btn-secondary-action:hover {
+            background-color: rgba(100, 116, 139, 0.6);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="cureverse-bg min-vh-100 p-3 p-sm-4 p-lg-5 position-relative overflow-hidden">
+        <div class="stardust-bg"></div>
+        <div class="container-fluid" style="max-width: 1200px; z-index: 1; position: relative;">
+            
+            <header class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="h4 text-white fw-bold" style="letter-spacing: 0.1em;">CUREVERSE</h1>
+                <div class="d-none d-md-block flex-grow-1 mx-4" style="max-width: 600px;">
+                    <div class="position-relative">
+                        <input type="text" placeholder="Search anything..." class="form-control form-control-dark rounded-pill ps-5" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-purple rounded-pill">Consult AI Assistant</button>
+                </div>
+            </header>
+
+            <main>
+                <h2 class="text-white mb-4">My Medications Tracker</h2>
+                <div class="row g-4">
+                    <!-- Emergency Card -->
+                    <div class="col-lg-4">
+                        <div class="tracker-card card-border-emergency p-4" style="animation-delay: 0.1s;">
+                            <div class="text-center">
+                                <h3 class="h5 fw-bold text-danger">🚨 EMERGENCY ALERT</h3>
+                                <p class="fw-bold text-white mb-0">10 Consecutive Missed Doses</p>
+                                <p class="text-white-50 small">Please contact your healthcare provider immediately.</p>
+                            </div>
+                            <hr class="border-secondary my-3"/>
+                            <div>
+                                <h4 class="h6 text-white mb-3">Today's Doses</h4>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="dose-item p-2 rounded d-flex justify-content-between align-items-center">
+                                        <span class="small">9:00 AM - MISSED</span>
+                                        <span class="status-badge status-missed">MISSED</span>
+                                    </div>
+                                    <div class="dose-item p-2 rounded d-flex justify-content-between align-items-center">
+                                        <span class="small">1:00 PM - MISSED</span>
+                                        <span class="status-badge status-upcoming">UPCOMING</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                 <div class="d-flex gap-2 mb-2">
+                                    <button class="btn-action btn-secondary-action w-100">Log Missed</button>
+                                    <button class="btn-action btn-secondary-action w-100">Log as Taken</button>
+                                </div>
+                                <button class="btn-action btn-emergency w-100">Contact Provider</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overdue Card -->
+                    <div class="col-lg-4">
+                        <div class="tracker-card card-border-overdue p-4" style="animation-delay: 0.2s;">
+                            <div class="text-center">
+                                <h3 class="h5 fw-bold text-warning">⏰ OVERDUE</h3>
+                                <p class="fw-bold text-white mb-0">Take dose before 1:00 PM</p>
+                                <p class="text-white-50 small">Grace period: 00:27</p>
+                            </div>
+                            <hr class="border-secondary my-3"/>
+                            <div>
+                                <h4 class="h6 text-white mb-3">Today's Doses</h4>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="dose-item p-2 rounded d-flex justify-content-between align-items-center">
+                                        <span class="small">9:00 AM - OVERDUE</span>
+                                        <span class="status-badge status-overdue">OVERDUE</span>
+                                    </div>
+                                    <div class="dose-item p-2 rounded d-flex justify-content-between align-items-center">
+                                        <span class="small">1:00 PM - MISSED</span>
+                                        <span class="status-badge status-upcoming">UPCOMING</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <div class="d-flex gap-2 mb-2">
+                                    <button class="btn-action btn-secondary-action w-100">Log Missed</button>
+                                    <button class="btn-action btn-secondary-action w-100">Log as Taken</button>
+                                </div>
+                                <button class="btn-action btn-overdue w-100">Mark as Taken</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Card -->
+                    <div class="col-lg-4">
+                        <div class="tracker-card card-border-upcoming p-4" style="animation-delay: 0.3s;">
+                            <div class="text-center">
+                                <h3 class="h5 fw-bold text-primary">🗓 UPCOMING</h3>
+                                <p class="fw-bold text-white mb-0">Next Dose: Today at 8:00 PM</p>
+                                <p class="text-white-50 small">&nbsp;</p>
+                            </div>
+                            <hr class="border-secondary my-3"/>
+                            <div>
+                                <h4 class="h6 text-white mb-3">Today's Doses</h4>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="dose-item p-2 rounded d-flex justify-content-between align-items-center">
+                                        <span class="small">10:00 AM - TAKEN</span>
+                                        <span class="status-badge status-taken">TAKEN</span>
+                                    </div>
+                                    <div class="dose-item p-2 rounded d-flex justify-content-between align-items-center">
+                                        <span class="small">2:00 PM - UPCOMING</span>
+                                        <span class="status-badge status-upcoming">UPCOMING</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                 <div class="d-flex gap-2 mb-2">
+                                    <button class="btn-action btn-secondary-action w-100">Log Missed</button>
+                                    <button class="btn-action btn-secondary-action w-100">Log as Taken</button>
+                                </div>
+                                <button class="btn-action btn-upcoming w-100">Mark as Taken</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

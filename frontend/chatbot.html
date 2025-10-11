@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CureVerse - AI Assistant</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- React via CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* Base styles from your existing theme */
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #cbd5e1;
+        }
+        @keyframes backgroundPan { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .cureverse-bg { 
+            background-image: 
+                linear-gradient(225deg, rgba(10, 3, 40, 0.85), rgba(18, 7, 74, 0.85), rgba(36, 14, 138, 0.85), rgba(10, 3, 40, 0.85)),
+                url('image_01aec2.png');
+            background-size: 200% 200%, cover; 
+            background-position: center;
+            position: relative; 
+            animation: backgroundPan 20s linear infinite; 
+            min-height: 100vh;
+        }
+        .stardust-bg { 
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); 
+            opacity: 0.2; 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; z-index: 0; 
+        }
+        .form-control-dark { 
+            background-color: rgba(30, 41, 59, 0.8); 
+            border: 1px solid #4a5568; 
+            color: white; 
+        }
+        .form-control-dark::placeholder { color: #94a3b8; }
+        .btn-purple { 
+            background-color: #8b5cf6; 
+            color: white; 
+            transition: all 0.3s ease; 
+        }
+        .btn-purple:hover { 
+            background-color: #9333ea; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4); 
+            color: white; 
+        }
+
+        /* --- Chat-specific Styles --- */
+        .chat-card {
+            background-color: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 1rem;
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+            height: 80vh; /* Set a fixed height */
+            max-height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #8b5cf6 #1e293b;
+        }
+        .message {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        .message.user {
+            background-color: #8b5cf6;
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+            align-self: flex-end;
+        }
+        .message.assistant {
+            background-color: #334155;
+            color: #e2e8f0;
+            border-bottom-left-radius: 0.25rem;
+            align-self: flex-start;
+        }
+        .chat-input-form {
+            border-top: 1px solid rgba(71, 85, 105, 0.5);
+        }
+        .chat-input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1rem;
+        }
+        .chat-input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        .btn-send {
+            background: linear-gradient(to right, #8b5cf6, #7c3aed);
+            border: none;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const Header = () => (
+            <header className="d-flex justify-content-between align-items-center mb-4">
+                <a href="setup.html" className="text-decoration-none">
+                    <h1 className="h4 text-white fw-bold" style={{ letterSpacing: '0.1em' }}>CUREVERSE</h1>
+                </a>
+                <a href="setup.html" className="btn btn-purple rounded-pill">← Back to Setup</a>
+            </header>
+        );
+
+        const ChatMessage = ({ message }) => (
+            <div className={`message ${message.sender}`}>
+                {message.text}
+            </div>
+        );
+
+        const App = () => {
+            const [messages, setMessages] = useState([
+                { sender: 'assistant', text: "Greetings! I am the CureVerse AI Assistant. How may I help you with your potions and elixirs today?" }
+            ]);
+            const [input, setInput] = useState('');
+            const messagesEndRef = useRef(null);
+
+            const scrollToBottom = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+
+            useEffect(() => {
+                scrollToBottom();
+            }, [messages]);
+            
+            // Simple AI responses for demonstration
+            const getAIResponse = (userInput) => {
+                const lowerInput = userInput.toLowerCase();
+                if (lowerInput.includes("hello") || lowerInput.includes("hi")) {
+                    return "Hello there! How can I assist you with your medication schedule?";
+                }
+                if (lowerInput.includes("missed")) {
+                    return "To check for missed doses, please refer to your tracker dashboard. I can guide you on how to log a missed or taken dose if you'd like.";
+                }
+                if (lowerInput.includes("thank you") || lowerInput.includes("thanks")) {
+                    return "You're most welcome! Is there anything else I can help you with today?";
+                }
+                return "I'm not sure how to answer that yet. I can help with general questions about tracking your potions. Try asking 'what happens if I miss a dose?'.";
+            };
+
+            const handleSend = (e) => {
+                e.preventDefault();
+                if (!input.trim()) return;
+
+                const userMessage = { sender: 'user', text: input };
+                setMessages(prev => [...prev, userMessage]);
+                
+                // Simulate AI thinking and responding
+                setTimeout(() => {
+                    const aiResponse = getAIResponse(input);
+                    const assistantMessage = { sender: 'assistant', text: aiResponse };
+                    setMessages(prev => [...prev, assistantMessage]);
+                }, 1000);
+
+                setInput('');
+            };
+
+            return (
+                <div className="cureverse-bg min-vh-100 p-3 p-sm-4 p-lg-5 position-relative overflow-hidden">
+                    <div className="stardust-bg"></div>
+                    <div className="container-fluid" style={{ maxWidth: '900px', zIndex: 1, position: 'relative' }}>
+                        <Header />
+                        <main>
+                            <div className="card chat-card">
+                                <div className="p-4 chat-messages d-flex flex-column">
+                                    {messages.map((msg, index) => <ChatMessage key={index} message={msg} />)}
+                                    <div ref={messagesEndRef} />
+                                </div>
+                                <form onSubmit={handleSend} className="p-3 chat-input-form d-flex align-items-center gap-3">
+                                    <input
+                                        type="text"
+                                        className="form-control chat-input"
+                                        placeholder="Ask about your potions..."
+                                        value={input}
+                                        onChange={e => setInput(e.target.value)}
+                                    />
+                                    <button type="submit" className="btn btn-send rounded-circle p-2 d-flex align-items-center justify-content-center" style={{width: '40px', height: '40px'}}>
+                                        ➤
+                                    </button>
+                                </form>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

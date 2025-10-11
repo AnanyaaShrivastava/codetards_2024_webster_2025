@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CureVerse Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Custom CSS for the CureVerse theme */
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #cbd5e1; /* slate-300 */
+        }
+        @keyframes backgroundPan { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .cureverse-bg { 
+            /* --- UPDATED BACKGROUND IMAGE WITH LIGHTER GRADIENT --- */
+            background-image: 
+                linear-gradient(225deg, rgba(10, 3, 40, 0.3), rgba(18, 7, 74, 0.3), rgba(36, 14, 138, 0.3), rgba(10, 3, 40, 0.3)),
+                url('https://storage.googleapis.com/context-images/513f5f16-5e08-4dd3-b796-aabaa071cbbc');
+            background-size: cover;
+            background-position: center;
+            position: relative; 
+            min-height: 100vh;
+        }
+        .stardust-bg { 
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); 
+            opacity: 0.2; 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; z-index: 0; 
+        }
+        .form-control-dark { 
+            background-color: rgba(30, 41, 59, 0.8); 
+            border: 1px solid #4a5568; 
+            color: white; 
+        }
+        .form-control-dark::placeholder { color: #94a3b8; }
+        .form-control-dark:focus { 
+            background-color: rgba(30, 41, 59, 0.8); 
+            border-color: #8b5cf6; 
+            box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25); 
+            color: white; 
+        }
+        .btn-purple { 
+            background-color: #8b5cf6; 
+            color: white; 
+            transition: all 0.3s ease; 
+        }
+        .btn-purple:hover { 
+            background-color: #9333ea; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4); 
+            color: white; 
+        }
+        /* --- ADJUSTED CARD OPACITY FOR READABILITY --- */
+        .card-glass {
+            background-color: rgba(15, 23, 42, 0.65); /* Less transparent */
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(71, 85, 105, 0.5); 
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        .card-glass-deep {
+            background-color: rgba(10, 15, 30, 0.75); /* Less transparent */
+            border: 1px solid rgba(51, 65, 85, 0.6);
+        }
+        .text-cyan-glow {
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.7);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cureverse-bg min-vh-100 p-3 p-sm-4 p-lg-5 position-relative overflow-hidden">
+        <div class="stardust-bg"></div>
+        <div class="container-fluid" style="max-width: 1200px; z-index: 1; position: relative;">
+            
+            <!-- Header -->
+            <header class="d-flex justify-content-between align-items-center mb-5">
+                <a href="homepage.html" class="text-decoration-none"><h1 class="h4 text-white fw-bold" style="letter-spacing: 0.1em;">CUREVERSE</h1></a>
+                <div class="d-none d-md-block flex-grow-1 mx-4" style="max-width: 600px;">
+                    <div class="position-relative">
+                        <input type="text" placeholder="Search anything..." class="form-control form-control-dark rounded-pill ps-5" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <a href="chatbot.html" class="btn btn-purple rounded-pill text-decoration-none">Consult AI Assistant</a>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main>
+                <h2 class="text-white mb-4">Fitness Tracker</h2>
+                <div class="row g-4">
+                    <!-- Adherence Overview -->
+                    <div class="col-lg-3">
+                        <div class="card card-glass card-glass-deep text-white p-3 h-100" style="animation-delay: 0.1s;">
+                            <div class="card-body text-center">
+                                <p class="small text-white-50 mb-1">Adherence Overview</p>
+                                <h2 class="display-4 fw-bold text-cyan-glow">78%</h2>
+                                <p class="mb-0 text-white-50">Adherence Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Adherence Trends Chart -->
+                    <div class="col-lg-9">
+                        <div class="card card-glass p-4" style="height: 300px;">
+                            <h3 class="h6 text-white mb-3">Adherence Trends</h3>
+                            <canvas id="adherenceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Adherence Cards -->
+                <div>
+                    <h3 class="h6 text-white mb-3 mt-4">Daily Adherence</h3>
+                    <div class="row g-3" id="daily-adherence-container">
+                        <!-- Elixir cards will be injected here by JavaScript -->
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Render the Adherence Trends Chart ---
+            const ctx = document.getElementById('adherenceChart').getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 250);
+            gradient.addColorStop(0, 'rgba(34, 211, 238, 0.6)');
+            gradient.addColorStop(1, 'rgba(139, 92, 246, 0.4)');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Daily Adherence',
+                        data: [80, 75, 90, 85, 95, 70, 100],
+                        backgroundColor: gradient,
+                        borderColor: 'rgba(34, 211, 238, 0.8)',
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        barThickness: 20,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+
+            // --- Render the Daily Adherence Cards ---
+            const elixirs = [
+                { name: "Solar Elixir (AM)", time: "7:00 AM", status: "Taken" },
+                { name: "Starfire Brew (AM)", time: "7:00 AM", status: "Missed" },
+                { name: "Dreamwater Draught", time: "8:00 AM", status: "Missed" }
+            ];
+
+            const container = document.getElementById('daily-adherence-container');
+            let content = '';
+            elixirs.forEach((elixir, index) => {
+                const statusClass = elixir.status === 'Taken' ? 'bg-success' : 'bg-danger';
+                content += `
+                    <div class="col-md-4">
+                        <div class="card card-glass card-glass-deep p-3 h-100" style="animation-delay: ${0.2 + index * 0.1}s">
+                            <p class="fw-bold mb-1">${elixir.name}</p>
+                            <p class="text-white-50 small mb-2">Taken: ${elixir.time}</p>
+                            <div class="p-2 rounded text-center small ${statusClass}">
+                                ${elixir.status} - ${elixir.time}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = content;
+        });
+    </script>
+
+</body>
+</html>
+

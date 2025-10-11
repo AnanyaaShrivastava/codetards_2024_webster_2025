@@ -93,13 +93,19 @@
     <div class="main-container min-h-screen w-full flex flex-col items-center justify-between p-4 sm:p-6 lg:p-8">
         
         <!-- Header -->
-        <header class="w-full max-w-7xl flex flex-col items-center justify-center text-center gap-6 mb-8">
-            <div class="flex flex-col items-center">
-                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-300 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2.5 7.5L12 12.5l9.5-5"></path><path d="M2.5 12.5L12 17.5l9.5-5"></path><path d="M12 22.5L2.5 17.5"></path><path d="M21.5 17.5L12 22.5"></path></svg>
-                <h1 class="text-4xl font-bold tracking-wider text-white">CUREVERSE</h1>
+        <header class="w-full max-w-7xl flex items-center justify-between mb-8">
+            <!-- Left side of header -->
+            <div class="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2.5 7.5L12 12.5l9.5-5"></path><path d="M2.5 12.5L12 17.5l9.5-5"></path><path d="M12 22.5L2.5 17.5"></path><path d="M21.5 17.5L12 22.5"></path></svg>
+                <h1 class="text-2xl font-bold tracking-wider text-white">CUREVERSE</h1>
             </div>
+            <!-- Right side of header -->
             <div class="flex items-center gap-4">
-                <a href="#" class="bg-blue-600/80 text-white font-semibold px-6 py-2 rounded-lg border border-blue-400/50 hover:bg-blue-500 transition-colors shadow-lg shadow-blue-500/20">GO TO DASHBOARD</a>
+                <a href="dashboard.html" class="bg-blue-600/80 text-white font-semibold px-6 py-2 rounded-lg border border-blue-400/50 hover:bg-blue-500 transition-colors shadow-lg shadow-blue-500/20">GO TO DASHBOARD</a>
+                <a href="chatbot.html" class="bg-purple-600/80 text-white font-semibold px-6 py-2 rounded-lg border border-purple-400/50 hover:bg-purple-500 transition-colors shadow-lg shadow-purple-500/20">Consult AI Assistant</a>
+                <button id="logout-btn" class="bg-yellow-500/20 text-yellow-300 font-semibold px-6 py-2 rounded-lg border border-yellow-400/50 hover:bg-yellow-500/40 transition-colors">
+                    Log Out
+                </button>
             </div>
         </header>
 
@@ -111,22 +117,16 @@
                 <div class="card-bg p-5">
                     <h3 class="font-semibold text-gray-300 mb-1">UPCOMING POTIONS</h3>
                     <p class="text-xs text-gray-500 mb-4">Quick Heal</p>
-                    <ul class="space-y-3">
-                        <li class="flex justify-between items-center bg-black/30 p-3 rounded-lg">
-                            <span class="text-sm">Solar Elixir (AM) - 7:00 AM</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 15l-3-3h6l-3 3z"></path><path d="M12 9V6"></path><path d="M9 12H6"></path><path d="M15 12h3"></path></svg>
-                        </li>
-                        <li class="flex justify-between items-center bg-black/30 p-3 rounded-lg">
-                            <span class="text-sm">Lunar Drapeze (PM) - 7:00 AM</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 15l-3-3h6l-3 3z"></path><path d="M12 9V6"></path><path d="M9 12H6"></path><path d="M15 12h3"></path></svg>
-                        </li>
+                    <ul class="space-y-3" id="potions-list">
+                        <!-- Potion data will be dynamically inserted here -->
+                        <li class="text-sm text-gray-400">Loading potions...</li>
                     </ul>
                 </div>
                 
                 <!-- Daily Oracle -->
                 <div class="card-bg oracle-card p-5 lg:col-span-1 md:col-span-2 flex flex-col justify-center items-center text-center">
                     <h3 class="font-semibold text-gray-300 mb-2">DAILY ORACLE</h3>
-                    <p class="text-xl text-yellow-200 italic">"The greatest wealth is health."</p>
+                    <p class="text-xl text-yellow-200 italic" id="oracle-quote">"..."</p>
                 </div>
                 
                 <!-- Wellness Arc (Progress) -->
@@ -139,10 +139,10 @@
                                 <!-- Background circle -->
                                 <circle class="text-gray-700" stroke-width="8" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50"></circle>
                                 <!-- Progress circle -->
-                                <circle class="text-yellow-400" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50" style="stroke-dasharray: 264; stroke-dashoffset: calc(264 - (264 * 78) / 100); transform: rotate(-90deg); transform-origin: 50% 50%;"></circle>
+                                <circle id="wellness-progress-circle" class="text-yellow-400" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50" style="stroke-dasharray: 264; stroke-dashoffset: 264; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 1s ease-out;"></circle>
                             </svg>
                             <div class="absolute inset-0 flex flex-col justify-center items-center">
-                                <span class="text-2xl font-bold">78%</span>
+                                <span class="text-2xl font-bold" id="wellness-percentage">0%</span>
                             </div>
                         </div>
                     </div>
@@ -153,44 +153,28 @@
                     </div>
                 </div>
                 
-                <!-- Wellness Arc (List) -->
-                <div class="card-bg p-5">
-                    <h3 class="font-semibold text-gray-300 mb-1">WELLNESS ARC</h3>
-                    <p class="text-xs text-gray-500 mb-4">Quick Heal</p>
-                    <ul class="space-y-3">
-                        <li class="flex justify-between items-center bg-black/30 p-3 rounded-lg">
-                            <span class="text-sm">Solar Elixir (AM) - 7:00 AM</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 15l-3-3h6l-3 3z"></path><path d="M12 9V6"></path><path d="M9 12H6"></path><path d="M15 12h3"></path></svg>
-                        </li>
-                        <li class="flex justify-between items-center bg-black/30 p-3 rounded-lg">
-                            <span class="text-sm">Lunar Drapeze (PM) - 7:00 PM</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 15l-3-3h6l-3 3z"></path><path d="M12 9V6"></path><path d="M9 12H6"></path><path d="M15 12h3"></path></svg>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- AI Health Assistant -->
+                <!-- AI Health Assistant (Static for now) -->
                 <div class="card-bg p-5">
                     <h3 class="font-semibold text-gray-300 mb-4">AI HEALTH ASSISTANT (CHATBOT)</h3>
                     <div class="space-y-3 text-sm">
-                        <div class="flex items-start gap-3">
-                            <div class="w-7 h-7 bg-purple-500/50 rounded-full flex-shrink-0"></div>
-                            <p class="bg-black/30 p-2 rounded-lg">what potions have i missed weekly?</p>
-                        </div>
-                         <div class="flex items-start gap-3 justify-end">
-                            <p class="bg-blue-500/30 p-2 rounded-lg text-right max-w-xs">On Oct 5th Your Cureverse shows a missed Lunar Drapeze on Tuesday.</p>
-                            <div class="w-7 h-7 bg-blue-500/50 rounded-full flex-shrink-0"></div>
-                        </div>
+                         <div class="flex items-start gap-3">
+                              <div class="w-7 h-7 bg-purple-500/50 rounded-full flex-shrink-0"></div>
+                              <p class="bg-black/30 p-2 rounded-lg">what potions have i missed weekly?</p>
+                         </div>
+                          <div class="flex items-start gap-3 justify-end">
+                              <p class="bg-blue-500/30 p-2 rounded-lg text-right max-w-xs">On Oct 5th Your Cureverse shows a missed Lunar Drapeze on Tuesday.</p>
+                              <div class="w-7 h-7 bg-blue-500/50 rounded-full flex-shrink-0"></div>
+                         </div>
                     </div>
                      <div class="mt-4 flex items-center bg-black/20 rounded-lg p-2">
                          <input type="text" placeholder="Ask for potions..." class="bg-transparent focus:outline-none w-full text-gray-300 placeholder-gray-500 text-sm">
                          <button>
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7-7-7"></path><path d="M5 12h14"></path></svg>
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7-7-7"></path><path d="M5 12h14"></path></svg>
                          </button>
                     </div>
                 </div>
 
-                <!-- The Great Sky Calendar -->
+                <!-- The Great Sky Calendar (Static for now) -->
                 <div class="card-bg p-5">
                     <h3 class="font-semibold text-gray-300 mb-4">THE GREAT SKY CALENDAR</h3>
                     <div class="flex justify-between items-center text-sm mb-3">
@@ -199,7 +183,6 @@
                         <button class="text-gray-400 hover:text-white">&gt;</button>
                     </div>
                     <div class="calendar-grid text-xs text-gray-400">
-                        <!-- Day headers -->
                         <div class="text-center font-semibold">Su</div>
                         <div class="text-center font-semibold">Mo</div>
                         <div class="text-center font-semibold">Tu</div>
@@ -207,47 +190,12 @@
                         <div class="text-center font-semibold">Th</div>
                         <div class="text-center font-semibold">Fr</div>
                         <div class="text-center font-semibold">Sa</div>
-                        <!-- Days -->
-                        <div class="calendar-day text-gray-600">28</div>
-                        <div class="calendar-day text-gray-600">29</div>
-                        <div class="calendar-day text-gray-600">30</div>
-                        <div class="calendar-day">1</div>
-                        <div class="calendar-day">2</div>
-                        <div class="calendar-day">3</div>
-                        <div class="calendar-day">4</div>
-                        <div class="calendar-day">5</div>
-                        <div class="calendar-day">6</div>
-                        <div class="calendar-day">7</div>
-                        <div class="calendar-day">8</div>
-                        <div class="calendar-day">9</div>
-                        <div class="calendar-day">10</div>
-                        <div class="calendar-day">11</div>
-                        <div class="calendar-day">12</div>
-                        <div class="calendar-day">13</div>
-                        <div class="calendar-day">14</div>
-                        <div class="calendar-day">15</div>
-                        <div class="calendar-day">16</div>
-                        <div class="calendar-day">17</div>
-                        <div class="calendar-day">18</div>
-                        <div class="calendar-day">19</div>
-                        <div class="calendar-day">20</div>
-                        <div class="calendar-day">21</div>
-                        <div class="calendar-day">22</div>
-                        <div class="calendar-day">23</div>
-                        <div class="calendar-day">24</div>
-                        <div class="calendar-day">25</div>
-                        <div class="calendar-day">26</div>
-                        <div class="calendar-day">27</div>
-                        <div class="calendar-day">28</div>
-                        <div class="calendar-day bg-blue-500/80 rounded-md text-white font-bold">29</div>
-                        <div class="calendar-day">30</div>
-                        <div class="calendar-day">31</div>
-                        <div class="calendar-day text-gray-600">1</div>
+                        <div class="calendar-day text-gray-600">28</div><div class="calendar-day text-gray-600">29</div><div class="calendar-day text-gray-600">30</div><div class="calendar-day">1</div><div class="calendar-day">2</div><div class="calendar-day">3</div><div class="calendar-day">4</div><div class="calendar-day">5</div><div class="calendar-day">6</div><div class="calendar-day">7</div><div class="calendar-day">8</div><div class="calendar-day">9</div><div class="calendar-day">10</div><div class="calendar-day">11</div><div class="calendar-day">12</div><div class="calendar-day">13</div><div class="calendar-day">14</div><div class="calendar-day">15</div><div class="calendar-day">16</div><div class="calendar-day">17</div><div class="calendar-day">18</div><div class="calendar-day">19</div><div class="calendar-day">20</div><div class="calendar-day">21</div><div class="calendar-day">22</div><div class="calendar-day">23</div><div class="calendar-day">24</div><div class="calendar-day">25</div><div class="calendar-day">26</div><div class="calendar-day">27</div><div class="calendar-day">28</div><div class="calendar-day bg-blue-500/80 rounded-md text-white font-bold">29</div><div class="calendar-day">30</div><div class="calendar-day">31</div><div class="calendar-day text-gray-600">1</div>
                     </div>
                 </div>
 
             </div>
-             <!-- Pagination Dots -->
+             <!-- Pagination Dots (Static) -->
             <div class="w-full flex justify-center items-center gap-3 mt-8">
                 <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
                 <div class="w-2.5 h-2.5 bg-gray-600 rounded-full"></div>
@@ -267,9 +215,130 @@
             </div>
         </footer>
     </div>
+
     <script>
-        // Script to generate stars in the background for a dynamic effect
-        document.addEventListener('DOMContentLoaded', function() {
+        const API_URL = 'http://localhost:5000/api';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('cureverse-token');
+            const logoutButton = document.getElementById('logout-btn');
+
+            // --- LOGOUT LOGIC ---
+            if(logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    localStorage.removeItem('cureverse-token');
+                    showLoggedOutState();
+                });
+            }
+
+            // --- AUTHENTICATION CHECK ---
+            if (!token) {
+                showLoggedOutState();
+                return; 
+            }
+            
+            // If there is a token, fetch the user's data
+            fetchPotions(token);
+            fetchWellnessArc();
+            fetchOracleQuote();
+            generateStars();
+        });
+
+        function showLoggedOutState() {
+            const potionsList = document.getElementById('potions-list');
+            if (potionsList) {
+                potionsList.innerHTML = `<li class="text-sm text-yellow-400"> <a href="index.html" class="underline">Add your First Potion Now.</a></li>`;
+            }
+            const wellnessEl = document.getElementById('wellness-percentage');
+            if(wellnessEl) wellnessEl.textContent = 'N/A';
+            
+            const oracleEl = document.getElementById('oracle-quote');
+            if(oracleEl) oracleEl.textContent = '"Add your first Potion to see your daily oracle."';
+        }
+
+        // --- FETCH FUNCTIONS ---
+        async function fetchPotions(token) {
+            try {
+                const response = await fetch(`${API_URL}/potions`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    }
+                });
+                if (response.status === 401) {
+                    localStorage.removeItem('cureverse-token');
+                    showLoggedOutState();
+                    return;
+                }
+                if (!response.ok) throw new Error('Network response was not ok');
+                const potions = await response.json();
+                
+                const potionsList = document.getElementById('potions-list');
+                potionsList.innerHTML = ''; 
+
+                if (potions.length === 0) {
+                     potionsList.innerHTML = '<li class="text-sm text-gray-400">No potions scheduled.</li>';
+                     return;
+                }
+
+                potions.forEach(potion => {
+                    const iconColor = potion.type === 'AM' ? 'text-yellow-300' : 'text-blue-300';
+                    const listItem = `
+                        <li class="flex justify-between items-center bg-black/30 p-3 rounded-lg">
+                            <span class="text-sm">${potion.name} (${potion.type}) - ${potion.time}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ${iconColor}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 15l-3-3h6l-3 3z"></path><path d="M12 9V6"></path><path d="M9 12H6"></path><path d="M15 12h3"></path></svg>
+                        </li>
+                    `;
+                    potionsList.innerHTML += listItem;
+                });
+
+            } catch (error) {
+                console.error('Failed to fetch potions:', error);
+                document.getElementById('potions-list').innerHTML = '<li class="text-sm text-red-400" title="This can happen if the backend server is not running or if CORS is not enabled on the server.">Connection Error. Is the server running?</li>';
+            }
+        }
+
+        async function fetchWellnessArc() {
+            try {
+                const response = await fetch(`${API_URL}/wellness-arc`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                const percentage = data.adherence;
+
+                const percentageText = document.getElementById('wellness-percentage');
+                const progressCircle = document.getElementById('wellness-progress-circle');
+                
+                percentageText.textContent = `${percentage}%`;
+
+                const circumference = 2 * Math.PI * 42;
+                const offset = circumference - (percentage / 100) * circumference;
+                progressCircle.style.strokeDashoffset = offset;
+
+            } catch (error) {
+                console.error('Failed to fetch wellness arc data:', error);
+                 const wellnessEl = document.getElementById('wellness-percentage');
+                 wellnessEl.textContent = 'ERR';
+                 wellnessEl.title = 'Could not connect to the server. Please ensure the backend is running and that CORS is enabled in your server.js file.';
+            }
+        }
+
+        async function fetchOracleQuote() {
+             try {
+                 const response = await fetch(`${API_URL}/oracle`);
+                 if (!response.ok) throw new Error('Network response was not ok');
+                 const data = await response.json();
+
+                 document.getElementById('oracle-quote').textContent = `"${data.quote}"`;
+             } catch (error) {
+                  console.error('Failed to fetch oracle quote:', error);
+                  const oracleEl = document.getElementById('oracle-quote');
+                  oracleEl.textContent = '"Connection Error"';
+                  oracleEl.title = 'Could not connect to the server. Please ensure the backend is running and that CORS is enabled in your server.js file.';
+             }
+        }
+
+        function generateStars() {
             const starsContainer = document.getElementById('stars-container');
             const numStars = 150;
 
@@ -284,8 +353,7 @@
                 star.style.animationDelay = `${Math.random() * 5}s`;
                 starsContainer.appendChild(star);
             }
-        });
+        }
     </script>
 </body>
 </html>
-
